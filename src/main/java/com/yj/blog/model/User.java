@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class User {
 
     @Id // Primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB의 넘버링 전략을 따라간다. (오라클이든 MySQL이든.. 등등)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB의 넘버링 전략을 따라간다. (오라클이든 MySQL이든.. 등등), 내 DB는 MySQL이니까 auto_increment가 됨
     private int id; // 오라클-시퀀스, MySQL-auto_increment
 
     @Column(nullable = false, length = 30) // null이 될 수 없고, 30자까지 밖에 안된다.
