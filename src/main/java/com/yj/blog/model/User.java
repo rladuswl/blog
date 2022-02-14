@@ -1,5 +1,9 @@
 package com.yj.blog.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -9,6 +13,10 @@ import java.sql.Timestamp;
 // JPA는 ORM -> Java(다른 언어 포함) Object를 테이블로 매핑해주는 기술
 // 개발자가 Object를 만들면 JPA가 테이블을 만들어줌
 
+@Data // getter setter
+@NoArgsConstructor // 빈 생성자
+@AllArgsConstructor // 전체 생성자
+@Builder // 빌더 패턴
 @Entity // User 클래스가 MySQL에 자동으로 테이블이 생성된다.
 public class User {
 

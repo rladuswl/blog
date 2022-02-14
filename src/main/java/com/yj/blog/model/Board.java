@@ -1,11 +1,19 @@
 package com.yj.blog.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Data // getter setter
+@NoArgsConstructor // 빈 생성자
+@AllArgsConstructor // 전체 생성자
+@Builder // 빌더 패턴
 @Entity
 public class Board {
 
@@ -26,7 +34,7 @@ public class Board {
     // 따라서 자바가 데이터베이스에 맞춰 FK(int)로 저장 -> private int userId;
 
     // 하지만 JPA를 사용하면! ORM에서는 객체를 그대로 저장할 수 있다. -> FK로 찾는게 아니라 User 객체 바로 넣음
-    @ManyToOne // 연관관계 Many = Board, User = One
+    @ManyToOne // 연관관계 Many = Board, One = User
     @JoinColumn(name = "userId") // 데이터베이스에다가 만들 필드 이름
     private User user; // 글 작성한 사람의 id, 자동으로 FK로 만들어지는 것
 
