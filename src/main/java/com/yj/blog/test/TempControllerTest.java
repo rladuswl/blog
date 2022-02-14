@@ -16,7 +16,7 @@ public class TempControllerTest {
 
         // 따라서 파일리턴 기본 경로에 리턴명을 /home.html 로 하면
         // 파일리턴 풀경로 : src/main/resources/static/home.html
-        // + 추가) tempJsp() 메소드를 위해 jsp 설정해놔서 이제 정적파일(html, img 등)은 동작할 수 없음
+        // + 추가) tempJsp() 메소드를 위해 jsp 설정해놔서 이제 정적파일(html, img 등)은 동작할 수 없음. JSP file [/WEB-INF/views/home.html.jsp] not found 이렇게 에러 나옴
         return "/home.html";
     }
 
