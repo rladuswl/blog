@@ -5,6 +5,7 @@ import com.yj.blog.model.RoleType;
 import com.yj.blog.model.User;
 import com.yj.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,18 @@ public class DummyControllerTest {
 
     @Autowired // 스프링 컨테이너에 UserRepository 타입으로 메모리에 떠있으면 userRepository에 넣어줌 (의존성 주입)
     private UserRepository userRepository;
+
+    @DeleteMapping("/dummy/user/{id}")
+    public String deleteUser(@PathVariable int id) {
+
+        try {
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            return "삭제에 실패하였습니다. 해당 id는 DB에 없습니다.";
+        }
+
+        return "삭제되었습니다. id : " + id;
+    }
 
     // email과 password만 수정 가능하도록 함
     // 기존의 email, password 불러오기
@@ -40,7 +53,7 @@ public class DummyControllerTest {
 //        userRepository.save(user); // 역할 1. id를 전달하지 않으면 insert, 역할 2. id를 전달하였는데 해당 id에 대한 데이터가 있으면 update, 역할 3. id를 전달하였는데 해당 id에 대한 데이터가 없으면 insert
 
 //        save 없이 @Transacntional로 update -> 더티 체킹
-        return null;
+        return user;
     }
 
     // http://localhost:8000/blog/dummy/user
