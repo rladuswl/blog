@@ -26,7 +26,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB의 넘버링 전략을 따라간다. (오라클이든 MySQL이든.. 등등), 내 DB는 MySQL이니까 auto_increment가 됨
     private int id; // 오라클-시퀀스, MySQL-auto_increment
 
-    @Column(nullable = false, length = 30) // null이 될 수 없고, 30자까지 밖에 안된다.
+    @Column(nullable = false, length = 30, unique = true) // null이 될 수 없고, 30자까지 밖에 안된다.
     private String username; // 아이디
 
     @Column(nullable = false, length = 100) // null이 될 수 없고, 100자까지 밖에 안된다. (100자 넣는 이유 : 해쉬(비밀번호 암호화)할 것을 대비해서 넉넉하게 만들기)
