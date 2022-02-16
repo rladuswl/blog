@@ -19,7 +19,7 @@ public class HttpControllerTest {
         return "lombok test 완료";
     }
 
-    // 인터넷 브라우저 요청은 무조건 get 요청 밖에 할 수 없다.
+    // 인터넷 브라우저 요청은 무조건 get 요청 밖에 할 수 없다. -> key=value 형태라서 @RequestBody 어노테이션 필요하지 않다.
     // http://localhost:8080/http/get (select)
     // http://localhost:8080/http/get?id=1&username=yeongon 처럼 [물음표+쿼리스트링]을 통해 데이터 보낼 수 있음, 매개변수는 (@RequestParam int id, @RequestParam String username) 로 받아야 함
     // 하지만 매개변수에 @RequestParam 를 일일이 적는 것이 아니라 Member 객체를 적어주면 알아서 매핑됨, 매핑 - MessageConverter (스프링부트) 가 함

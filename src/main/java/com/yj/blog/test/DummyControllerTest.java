@@ -9,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -22,6 +20,28 @@ public class DummyControllerTest {
 
     @Autowired // 스프링 컨테이너에 UserRepository 타입으로 메모리에 떠있으면 userRepository에 넣어줌 (의존성 주입)
     private UserRepository userRepository;
+
+    // email과 password만 수정 가능하도록 함
+    // 기존의 email, password 불러오기
+    @Transactional // 함수 종료시에 자동 commit이 됨
+    @PutMapping("/dummy/user/{id}")
+    public User updateUser(@PathVariable int id, @RequestBody User requestUser) { // json 데이터로 받기 위해 @RequestBdoy 사용 (<-> key=value 데이터는 @RequestBody 사용 X)
+        // json 데이터 요청 -> Java Object : 스프링의 MessageConverter의 Jackson 라이브러리가 반환해서 받아줌.
+        System.out.println("id:"+id);
+        System.out.println("password:"+requestUser.getPassword());
+        System.out.println("email:"+requestUser.getEmail());
+
+        User user = userRepository.findById(id).orElseThrow(()->{
+            return new IllegalArgumentException("수정에 실패하였습니다.");
+        });
+        user.setPassword(requestUser.getPassword());
+        user.setEmail(requestUser.getEmail());
+
+//        userRepository.save(user); // 역할 1. id를 전달하지 않으면 insert, 역할 2. id를 전달하였는데 해당 id에 대한 데이터가 있으면 update, 역할 3. id를 전달하였는데 해당 id에 대한 데이터가 없으면 insert
+
+//        save 없이 @Transacntional로 update -> 더티 체킹
+        return null;
+    }
 
     // http://localhost:8000/blog/dummy/user
     @GetMapping("/dummy/users")
