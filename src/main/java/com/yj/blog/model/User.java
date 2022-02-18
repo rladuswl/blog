@@ -39,6 +39,6 @@ public class User {
     @Enumerated(EnumType.STRING) // DB에는 RoleType이라는게 없어서 이걸 붙여줘야함
     private RoleType role; // Enum을 쓰면 데이터의 도메인(범위)을 만들어 줄 수 있다. (도메인 : admin, user, manager ...) -> 하지만 우선 String으로.. -> 추후 Enum으로 설정
 
-    @CreationTimestamp // 시간이 자동으로 입력
+    @CreationTimestamp // 시간이 자동으로 입력, 내가 직접 시간을 넣으려면 Timestamp.valueOf(LocalDateTime.now())
     private Timestamp createDate;
 }
