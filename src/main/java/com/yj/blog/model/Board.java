@@ -28,7 +28,7 @@ public class Board {
     @Lob // 대용량 데이터
     private String content; // 섬머노트 라이브러리 - 쓴 글이 디자인 되는데 <html> 태그가 섞여서 디자인이 됨 -> 글자수 커짐 -> 대용량
 
-    @ColumnDefault("0") // String이 아니여서 ''로 안 감싸도 됨
+//    @ColumnDefault("0") // String이 아니여서 ''로 안 감싸도 됨
     private int count; // 조회수
 
     // 데이터베이스는 오브젝트(객체)를 저장할 수 없어서 FK를 사용한다. BUT 자바는 객체를 저장할 수 있다. -> 두 개의 충돌!
