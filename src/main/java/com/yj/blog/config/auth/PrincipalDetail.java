@@ -54,7 +54,7 @@ public class PrincipalDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        Collection<GrantedAuthority> collectors = new ArrayList<>();
+        Collection<GrantedAuthority> collectors = new ArrayList<>(); // ArrayList는 Collection 타입이다. (상속)
 
 //        collectors.add(new GrantedAuthority() {
 //
@@ -64,7 +64,7 @@ public class PrincipalDetail implements UserDetails {
 //            }
 //        });
 
-        collectors.add(()->{return "ROLE_"+ user.getRole();}); // 어차피 add 안에 들어갈 함수는 GrantedAuthority() 뿐이기 때문에 람다식으로 가능
+        collectors.add(()->{return "ROLE_"+ user.getRole();}); // 어차피 add 안에 들어갈 파라미터는 GrantedAuthority(메소드도 getAuthority() 하나 가지고 있음) 뿐이기 때문에 람다식으로 가능
 
         return collectors;
     }
