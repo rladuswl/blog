@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service // 스프링이 컴포넌트 스캔을 통해서 Bean에 등록을 해줌. (IoC)
 public class BoardService {
@@ -19,5 +21,9 @@ public class BoardService {
         board.setCount(0);
         board.setUser(user);
         boardRepository.save(board);
+    }
+
+    public List<Board> 글목록() {
+        return boardRepository.findAll();
     }
 }

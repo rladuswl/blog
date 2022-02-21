@@ -1,18 +1,25 @@
 package com.yj.blog.controller;
 
 import com.yj.blog.config.auth.PrincipalDetail;
+import com.yj.blog.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class BoardController {
 
+    @Autowired
+    private BoardService boardService;
+
     @GetMapping({"", "/"})
-    public String index() { // 컨트롤러에서 로그인 된 세션을 찾는 방식 : @AuthenticationPrincipal PrincipalDetail principal
+    public String index(Model model) {
+        model.addAttribute("boards", boardService.글목록());
+
         // /WEB-INF/views/index.jsp
-        return "index";
+        return "index"; // viewResolver 작동 (@Controller)
     }
 
     @GetMapping("/board/saveForm")
