@@ -6,6 +6,9 @@ let index = {
         $("#btn-delete").on("click", ()=>{
             this.deleteById();
         });
+        $("#btn-update").on("click", ()=>{
+            this.update();
+        });
     },
 
     save: function () {
@@ -26,13 +29,13 @@ let index = {
             location.href = "/";
         }).fail(function (error) {
             // 실패하면 fail 실행
-            alert("회원가입이 실패하였습니다.");
+            alert("글작성을 실패하였습니다.");
             alert(JSON.stringify(error));
         });
     },
 
     deleteById: function () {
-        var id = $("#id").text();
+        let id = $("#id").text();
 
         $.ajax({
             type: "DELETE",
@@ -45,6 +48,31 @@ let index = {
         }).fail(function (error) {
             // 실패하면 fail 실행
             alert("글삭제를 실패하였습니다.");
+            alert(JSON.stringify(error));
+        });
+    },
+
+    update: function () {
+        let id = $("#id").val();
+
+        let data = {
+            title: $("#title").val(),
+            content: $("#content").val()
+        };
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/board/"+id,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        }).done(function (resp) {
+            // 결과가 정상이면 done 실행
+            alert("글수정이 완료되었습니다.");
+            location.href = "/";
+        }).fail(function (error) {
+            // 실패하면 fail 실행
+            alert("글수정을 실패하였습니다.");
             alert(JSON.stringify(error));
         });
     },
