@@ -3,6 +3,9 @@ let index = {
         $("#btn-save").on("click", ()=>{
             this.save();
         });
+        $("#btn-delete").on("click", ()=>{
+            this.deleteById();
+        });
     },
 
     save: function () {
@@ -24,6 +27,24 @@ let index = {
         }).fail(function (error) {
             // 실패하면 fail 실행
             alert("회원가입이 실패하였습니다.");
+            alert(JSON.stringify(error));
+        });
+    },
+
+    deleteById: function () {
+        var id = $("#id").text();
+
+        $.ajax({
+            type: "DELETE",
+            url: "/api/board/"+id,
+            dataType: "json"
+        }).done(function (resp) {
+            // 결과가 정상이면 done 실행
+            alert("글삭제가 완료되었습니다.");
+            location.href = "/";
+        }).fail(function (error) {
+            // 실패하면 fail 실행
+            alert("글삭제를 실패하였습니다.");
             alert(JSON.stringify(error));
         });
     },
