@@ -48,11 +48,14 @@ public class UserService {
                     return new IllegalArgumentException("회원 찾기 실패, id : "+user.getId());
                 });
 
-        String rawPassword = user.getPassword();
-        String encPassword = encoder.encode(rawPassword);
+        // Validate 체크 (카카오 로그인 사용자는 password, email을 변경할 수 없다.)
+        if (persistance.getOauth() == null || persistance.getOauth().equals("")) {
+            String rawPassword = user.getPassword();
+            String encPassword = encoder.encode(rawPassword);
 
-        persistance.setPassword(encPassword); // 영속화 되어 있는 객체를 변경
-        persistance.setEmail(user.getEmail());
+            persistance.setPassword(encPassword); // 영속화 되어 있는 객체를 변경
+            persistance.setEmail(user.getEmail());
+        }
 
         // 회원 수정 함수 종료 시(Service 종료 시) -> 트랜잭션 종료 -> commit(영구적)이 자동으로 된다.
         // 영속화된 persistance 객체의 변화가 감지되면 더티체킹 되어 자동으로 DB에 update문을 날려준다.

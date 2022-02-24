@@ -155,6 +155,7 @@ public class UserController {
                 .username(kakaoProfile.getKakao_account().getEmail() + "_" + kakaoProfile.getId())
                 .password(yjKey)
                 .email(kakaoProfile.getKakao_account().getEmail())
+                .oauth("kakao")
                 .build();
 
         // 가입자 혹은 비가입자 분기 (이미 회원인지 아닌지 체크)
