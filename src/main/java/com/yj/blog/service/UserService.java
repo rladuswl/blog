@@ -57,4 +57,12 @@ public class UserService {
         // 회원 수정 함수 종료 시(Service 종료 시) -> 트랜잭션 종료 -> commit(영구적)이 자동으로 된다.
         // 영속화된 persistance 객체의 변화가 감지되면 더티체킹 되어 자동으로 DB에 update문을 날려준다.
     }
+
+    @Transactional(readOnly = true) // select만 하기 때문에 readonly
+    public User 회원찾기(String username) {
+        User user = userRepository.findByUsername(username).orElseGet(()->{ // .orElseGet : 회원을 찾았는데 없으면, 빈 객체 리턴
+            return new User();
+        });
+        return user;
+    }
 }

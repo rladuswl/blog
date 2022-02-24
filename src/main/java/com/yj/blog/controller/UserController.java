@@ -6,11 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yj.blog.config.auth.PrincipalDetail;
 import com.yj.blog.model.KakaoProfile;
 import com.yj.blog.model.OAuthToken;
+import com.yj.blog.model.User;
+import com.yj.blog.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,10 +26,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 // 인증이 안된 사용자들이 출입할 수 있는 경로 : /auth/** (auth의 하위) 허용, 주소가 그냥 / 이면 index.jsp로 가는데 이 곳도 허용, static 이하에 있는 /js/**, /css/**, /image/** 허용
 
 @Controller
 public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Value("${yj.key}")
+    private String yjKey;
 
     @GetMapping("/auth/joinForm") // 회원가입하러 들어가는데 인증 될 필요 없으므로 /auth/
     public String joinForm() {
@@ -42,8 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/auth/kakao/callback")
-    public @ResponseBody
-    String kakaoCallback(String code) { // @ResponseBody : Data를 리턴해주는 컨트롤러 함수
+    public String kakaoCallback(String code) { // @ResponseBody : Data를 리턴해주는 컨트롤러 함수
 
         // 카카오 API 서버에게 POST 방식으로 key=value 데이터를 요청
         // 요청 방법 -> 여러가지 라이브러리  : HttpsURLConnection, Retrofit2(주로 안드로이드), OkHttp, RestTemplate
@@ -123,12 +141,41 @@ public class UserController {
             e.printStackTrace();
         }
 
-        // User 오브젝트 : id, username, password, email, role, createDate
+        // User 오브젝트 : (id), username, password, email, (role), (createDate)
         System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId());
         System.out.println("카카오 이메일 : " + kakaoProfile.getKakao_account().getEmail());
 
+        System.out.println("블로그서버 유저네임 : " + kakaoProfile.getKakao_account().getEmail() + "_" + kakaoProfile.getId());
+        System.out.println("블로그서버 이메일 : " + kakaoProfile.getKakao_account().getEmail());
+        UUID garbagePassword = UUID.randomUUID();
+        // UUID란 중복되지 않는 어떤 특정 값을 만들어내는 알고리즘
+        System.out.println("블로그서버 패스워드 : " + yjKey);
+
+        User kakaoUser = User.builder()
+                .username(kakaoProfile.getKakao_account().getEmail() + "_" + kakaoProfile.getId())
+                .password(yjKey)
+                .email(kakaoProfile.getKakao_account().getEmail())
+                .build();
+
+        // 가입자 혹은 비가입자 분기 (이미 회원인지 아닌지 체크)
+        User originUser = userService.회원찾기(kakaoUser.getUsername());
+
+        // 비가입자(null)이면, 회원가입 후 로그인 처리
+        if (originUser.getUsername() == null) {
+            System.out.println("기존 회원이 아니기에 자동으로 회원가입을 진행합니다.");
+            userService.회원가입(kakaoUser);
+        }
+
+        System.out.println("자동 로그인을 진행합니다.");
+
+        // 가입자이면 회원가입 없이 로그인 처리
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), yjKey));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
 //        return "카카오 인증 완료 : 코드값 : " + code;
 //        return "카카오 토큰 요청 완료 : 토큰요청에 대한 응답 : " + response.getBody();
-        return "액세스 토큰으로 회원정보 요청 : 회원정보 요청에 대한 응답 : " + response2.getBody();
+//        return "액세스 토큰으로 회원정보 요청 : 회원정보 요청에 대한 응답 : " + response2.getBody();
+//        return "회원가입 완료";
+        return "redirect:/";
     }
 }
