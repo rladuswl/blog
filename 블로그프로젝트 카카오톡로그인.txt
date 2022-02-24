@@ -1,28 +1,39 @@
 카카오 api
-클라이언트 키 : d5526e3b2a4169a3d9f2b7a6f9a12cdf
 	
-웹서버주소 : http://localhost:8000
+1. 웹서버주소 : http://localhost:8000
+2. 클라이언트 키 : d5526e3b2a4169a3d9f2b7a6f9a12cdf
 
-카카오 로그인요청 콜백 주소: http://localhost:8000/auth/kakao/callback
+3. 카카오 로그인요청 콜백 주소: http://localhost:8000/auth/kakao/callback
 
+
+4. 카카오 동의 구성
+User 오브젝트 : id(번호), username, password, email
 카카오로부터 받을 정보 : profile 정보(필수) , email(선택)
 
 -----------------------
 
-로그인 요청 주소 (GET)
-기본 : oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code
+6. 로그인 요청 주소 (GET)
+https://kauth.kakao.com/oauth/authorize?client_id=d5526e3b2a4169a3d9f2b7a6f9a12cdf&redirect_uri=http://localhost:8000/auth/kakao/callback&response_type=code
 
-내가 쓸 것 : https://kauth.kakao.com/oauth/authorize?client_id=d5526e3b2a4169a3d9f2b7a6f9a12cdf&redirect_uri=http://localhost:8000/auth/kakao/callback&response_type=code
-
-응답 받은 코드 : http://localhost:8000/auth/kakao/callback?code=04MBIEBh-YAPy8FFBCCoe9h9L_NggQqfavAkjnQgbQ06FYQEbkC_YPG6-UBz9hyZxdBFiQorDKYAAAF_J2OJxg
+7. 응답 받은 코드
+http://localhost:8000/auth/kakao/callback?code=04MBIEBh-YAPy8FFBCCoe9h9L_NggQqfavAkjnQgbQ06FYQEbkC_YPG6-UBz9hyZxdBFiQorDKYAAAF_J2OJxg
 
 ------------------------
 
-토큰 발급 요청 주소 (POST)
-MIME : application/x-www-form-urlencoded;charset=utf-8 -> (key=value) 형태
-https://kauth.kakao.com/oauth/token
-
+8. 토큰 발급 요청 주소 (POST) - http body에 데이터 전달 (4가지 데이터 담기) 
+요청 주소 : https://kauth.kakao.com/oauth/token
+헤더 값(MIME 타입)
+application/x-www-form-urlencoded;charset=utf-8 -> (key=value) 형태
+바디 값
 grant_type = authorization_code
 client_id = d5526e3b2a4169a3d9f2b7a6f9a12cdf
 redirect_uri = http://localhost:8000/auth/kakao/callback
 code = {동적}
+
+----------------------
+
+9. 토큰을 통한 사용자 정보 조회 (POST)
+요청 주소 : https://kapi.kakao.com/v2/user/me
+헤더 값
+Authorization : Bearer {access_token}
+Content-type : application/x-www-form-urlencoded;charset=utf-8
