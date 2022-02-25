@@ -1,8 +1,10 @@
 package com.yj.blog.service;
 
 import com.yj.blog.model.Board;
+import com.yj.blog.model.Reply;
 import com.yj.blog.model.User;
 import com.yj.blog.repository.BoardRepository;
+import com.yj.blog.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,9 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     @Transactional // 전체가 성공해야 commit, 실패하면 rollback
     public void 글쓰기(Board board, User user) { // title, content
@@ -54,6 +59,18 @@ public class BoardService {
         board.setTitle(requestBoard.getTitle());
         board.setContent(requestBoard.getContent());
         // 해당 함수 종료시(Service가 종료될 때) 트랜잭션 종료 -> 영속화 되어있는 board 데이터가 달라졌기 때문에 더티체킹 일어남 -> 변경 감지 -> DB에 자동 flush
+    }
+
+    @Transactional // 전체가 성공해야 commit, 실패하면 rollback
+    public void 댓글쓰기(User user, int boardId, Reply requestReply) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(()->{
+                    return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다. id : " + boardId);
+                });
+        requestReply.setBoard(board);
+        requestReply.setUser(user);
+
+        replyRepository.save(requestReply);
     }
 
 }
