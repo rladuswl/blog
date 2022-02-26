@@ -47,7 +47,7 @@ public class Board {
 
     // But!!
     // Board (게시글상세페이지)에 들어가면 작성자(User)와 댓글(Reply)는 무조건 불러와야 한다. 따라서 패치전략을 자동으로 불러오는 EAGER을 사용하자.
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"board"})
     @OrderBy("id desc") // 내림차순
     private List<Reply> replys;
