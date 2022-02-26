@@ -1,6 +1,7 @@
 package com.yj.blog.controller.api;
 
 import com.yj.blog.config.auth.PrincipalDetail;
+import com.yj.blog.dto.RelySaveRequestDto;
 import com.yj.blog.dto.ResponseDto;
 import com.yj.blog.model.Board;
 import com.yj.blog.model.Reply;
@@ -37,9 +38,12 @@ public class BoardApiController {
     }
 
     @PostMapping("/api/board/{boardId}/reply")
-    public ResponseDto<Integer> replySave(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) { // 컨트롤러에서 로그인 된 세션을 찾는 방식 : @AuthenticationPrincipal PrincipalDetail principal
+    public ResponseDto<Integer> replySave(@RequestBody RelySaveRequestDto relySaveRequestDto) {
+//        boardService.댓글쓰기(principal.getUser(), boardId, reply);
+//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 
-        boardService.댓글쓰기(principal.getUser(), boardId, reply);
+        // 데이터 받을 때 컨트롤러에서 dto를 만들어서 받는게 좋다.
+        boardService.댓글쓰기(relySaveRequestDto);
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
 }
