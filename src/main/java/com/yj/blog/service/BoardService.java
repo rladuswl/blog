@@ -25,9 +25,6 @@ public class BoardService {
     @Autowired
     private ReplyRepository replyRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Transactional // 전체가 성공해야 commit, 실패하면 rollback
     public void 글쓰기(Board board, User user) { // title, content
         board.setCount(0);
